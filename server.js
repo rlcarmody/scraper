@@ -5,7 +5,10 @@ const cookieParser = require('cookie-parser');
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/mongoHeadlines';
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI, { 
+  useNewUrlParser: true,
+  useFindAndModify: false
+});
 mongoose.set('useCreateIndex', true);
 
 const app = express();

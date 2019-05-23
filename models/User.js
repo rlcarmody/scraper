@@ -15,10 +15,6 @@ const UserSchema = new Schema({
   }],
 });
 
-UserSchema.methods.changeUserName = (newUserName) => {
-  this.username = newUserName;
-};
-
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

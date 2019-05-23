@@ -1,11 +1,26 @@
-<h1>{{user.username}}</h1>
-{{#each articles}}
-<div>
-  <a href="{{url}}">{{title}}</a>
-  <p>{{byline}}</p>
-  <img src="{{imageURL}}" />
-  <p>{{summary}}</p>
-  <textarea id="{{id}}"></textarea>
-  <button data-id="{{_id}}">Add Comment</button>
+<input id="user" type="text" class="userName" value="{{user.username}}" />
+<div class="row">
+  {{#each articles}}
+  <div class="article" data-article-id="{{_id}}">
+    <a href="{{url}}">{{title}}</a>
+    <p>by {{byline}}</p>
+    <img src="{{imageURL}}" />
+    <p>{{summary}}</p>
+    <a href="{{_id}}" class="commentlink">View Comments ({{comments.length}})</a>
+    <div class="hidden" data-comment-block="{{_id}}">
+      <div id="comments-for-{{_id}}"></div>
+      <textarea id="{{id}}"></textarea>
+      <button class="commentButton" data-id="{{_id}}">Add Comment</button>
+    </div>
+  </div>
+  {{/each}}
 </div>
-{{/each}}
+<div class="row space-between">
+  {{#unless firstPage}}
+  <button id="prev">Back</button>
+  {{/unless}}
+  {{#if firstPage}}
+  <span></span>
+  {{/if}}
+  <button id="next">Next</button>
+</div>
