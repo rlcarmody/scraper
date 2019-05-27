@@ -50,11 +50,26 @@ const getComments = id => {
       const commentList = document.getElementById(`comments-for-${id}`);
       let content = '';
       data.forEach(comment => {
-        content += `<div class="comment"><span class="userName">${comment.user.username}</span>
-        <p>${comment.text}</p></div>`
+        content += `<div class="comment">
+        <div class="row space-between">
+          <span class="userName" data-currentUser="${comment.isCurrentUser}">${comment.user}
+          </span>`;
+        if (comment.isCurrentUser) {
+          content += `<i class="deleteComment" id="${comment.id}"></i>`
+        }
+        content += `</div><p>${comment.text}</p></div>`;
       });
       commentList.innerHTML = content;
     }));
+}
+
+const deleteComment = comment => {
+  const id = comment.getAttribute('id');
+  fetch(`delete-comment/${id}`, { method: 'DELETE' })
+    .then(response => {
+      console.log(response);
+      comment.parentElement.parentElement.remove();
+    });
 }
 
 const buttons = document.querySelectorAll('.commentButton');
@@ -100,3 +115,14 @@ document.getElementById('prev').addEventListener('click', event => {
 if (document.querySelector('.row').children.length < 5) {
   document.getElementById('next').remove();
 }
+
+const commentslist = document.querySelectorAll('.comments');
+[...commentslist].forEach(commentlist => {
+  commentlist.addEventListener('click', event => {
+    event.preventDefault();
+    if (event.target && event.target.classList.contains('deleteComment')) {
+      const comm = document.getElementById(event.target.getAttribute('id'));
+      deleteComment(comm);
+    }
+  })
+})

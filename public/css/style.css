@@ -1,5 +1,5 @@
 body {
-  background-color: #0af;
+  background-color: #ABCCE9;
 }
 
 .row {
@@ -57,7 +57,7 @@ textarea {
 
 button {
   padding: 5px 20px;
-  background-color: #687985;
+  background-color: #FF2929;
   color: white;
   border: none;
   font-weight: 800;
@@ -68,6 +68,18 @@ button {
 button:hover {
   transform: scale(1.1);
   cursor: pointer;
+}
+
+.deleteComment::after {
+  content: url('../icons/baseline-delete-24px.svg');
+}
+
+.deleteComment:hover {
+  cursor: pointer;
+}
+
+[data-currentUser=true] {
+  color: green;
 }
 
 @media screen and (max-width: 600px) {

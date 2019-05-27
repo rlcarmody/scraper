@@ -15,7 +15,7 @@ const getUserName = cookies => {
 module.exports = app => {
   app.get('/', async (req, res) => {
     const user = await getUserName(req.cookies);
-    res.cookie('id', user._id, { maxAge: 31556952000 });
+    res.cookie('id', user._id, { maxAge: 31556952000, httpOnly: true });
 
     const articles = await scrapeArticles();
 
@@ -54,7 +54,8 @@ module.exports = app => {
     });
   });
 
-  app.get('/view-comments/:id', (req, res) => {
+  app.get('/view-comments/:id', async (req, res) => {
+    const user = await getUserName(req.cookies);
     const id = req.params.id;
     db.Article.findById(id)
       .populate({
@@ -63,16 +64,41 @@ module.exports = app => {
       })
       .then(article => {
         const { comments } = article;
-        res.json(comments);
+        const sanitizedComments = comments.map(comment => {
+          return {
+            createdDate: comment.createdDate,
+            text: comment.text,
+            user: comment.user.username,
+            id: comment.id,
+            isCurrentUser: comment.user.id === user.id
+          };
+        });
+        res.json(sanitizedComments);
       });
+  });
+
+  app.delete('/delete-comment/:id', async (req, res) => {
+    const user = await getUserName(req.cookies);
+    const id = req.params.id;
+    db.Comment.findById(id, async (err, doc) => {
+      if (err) {
+        return res.status(500).end();
+      }
+      if (doc.user.equals(user._id)) {
+        const deletedComment = await db.Comment.findByIdAndDelete(id);
+        console.log(deletedComment);
+        res.end();
+      } else {
+        res.status(401).end();
+      }
+    });
   });
 
   app.get('/:pgnumber', async (req, res) => {
     const user = await getUserName(req.cookies);
     res.cookie('id', user._id, { maxAge: 31556952000 });
-    const pageNumber = parseInt(req.params.pgnumber,10);
+    const pageNumber = parseInt(req.params.pgnumber, 10);
     const skip = (pageNumber - 1) * 5;
-    const articleId = req.query.last;
 
     db.Article.find({}).skip(skip).sort({ _id: -1 }).limit(5).then((results) => {
       res.render('articles', { articles: results, user, firstPage: pageNumber === 1, pageNumber });
