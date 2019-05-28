@@ -12,10 +12,10 @@ const postComment = id => {
   })
     .then(response => {
       response.json()
-      .then(data => {
-        console.log(data);
-        getComments(id);
-      });
+        .then(data => {
+          console.log(data);
+          getComments(id);
+        });
     })
     .catch(error => {
       console.error(error);
@@ -24,17 +24,17 @@ const postComment = id => {
 
 const updateUsername = userName => {
   fetch('/updateUser', {
-    method: 'PUT', 
-    body: JSON.stringify({userName}),
+    method: 'PUT',
+    body: JSON.stringify({ userName }),
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then(response => {
       response.json()
-      .then(data => {
-        console.log(data);
-      });
+        .then(data => {
+          console.log(data);
+        });
     })
     .catch(error => {
       console.log(error);
@@ -44,23 +44,23 @@ const updateUsername = userName => {
 const getComments = id => {
   fetch(`/view-comments/${id}`)
     .then(response => response.json()
-    .then(data => {
-      const commentBlock = document.querySelector(`[data-comment-block="${id}"]`);
-      commentBlock.classList.remove('hidden');
-      const commentList = document.getElementById(`comments-for-${id}`);
-      let content = '';
-      data.forEach(comment => {
-        content += `<div class="comment">
+      .then(data => {
+        const commentBlock = document.querySelector(`[data-comment-block="${id}"]`);
+        commentBlock.classList.remove('hidden');
+        const commentList = document.getElementById(`comments-for-${id}`);
+        let content = '';
+        data.forEach(comment => {
+          content += `<div class="comment">
         <div class="row space-between">
           <span class="userName" data-currentUser="${comment.isCurrentUser}">${comment.user}
           </span>`;
-        if (comment.isCurrentUser) {
-          content += `<i class="deleteComment" id="${comment.id}"></i>`
-        }
-        content += `</div><p>${comment.text}</p></div>`;
-      });
-      commentList.innerHTML = content;
-    }));
+          if (comment.isCurrentUser) {
+            content += `<i class="deleteComment" id="${comment.id}"></i>`
+          }
+          content += `</div><p>${comment.text}</p></div>`;
+        });
+        commentList.innerHTML = content;
+      }));
 }
 
 const deleteComment = comment => {
@@ -97,22 +97,26 @@ const viewComments = document.querySelectorAll('.commentlink');
 
 document.getElementById('next').addEventListener('click', event => {
   event.preventDefault();
-  let currentPage = location.href.substr(-1,1);
+  let currentPage = location.href.substr(-1, 1);
   if (currentPage === '/') {
     currentPage = 1;
   }
   const nextPage = parseInt(currentPage) + 1;
   location.href = `${location.origin}/${nextPage}`
 });
+try {
+  document.getElementById('prev').addEventListener('click', event => {
+    event.preventDefault();
+    let currentPage = location.href.substr(-1, 1);
+    const nextPage = parseInt(currentPage) - 1;
+    location.href = `${location.origin}/${nextPage}`;
+  });
+} catch (error) {
+  console.log(error);
+}
 
-document.getElementById('prev').addEventListener('click', event => {
-  event.preventDefault();
-  let currentPage = location.href.substr(-1,1);
-  const nextPage = parseInt(currentPage) - 1;
-  location.href = `${location.origin}/${nextPage}`;
-});
 
-if (document.querySelector('.row').children.length < 5) {
+if (document.querySelector('#articles').children.length < 5) {
   document.getElementById('next').remove();
 }
 
@@ -124,5 +128,13 @@ const commentslist = document.querySelectorAll('.comments');
       const comm = document.getElementById(event.target.getAttribute('id'));
       deleteComment(comm);
     }
-  })
-})
+  });
+});
+
+document.getElementById('usericon').addEventListener('click', () => {
+  document.getElementById('user').focus();
+});
+
+
+const user = document.getElementById('user');
+user.setAttribute('size', `${user.value.length - 4}`);

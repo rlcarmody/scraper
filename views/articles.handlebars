@@ -1,5 +1,13 @@
-<input id="user" type="text" class="userName" value="{{user.username}}" />
-<div class="row">
+<div class="row space-between nav" id="header">
+  <div>
+    <h1 id="logo"><a href="./">TechScraper</a></h1>
+  </div>
+  <div class="row end">
+    <input id="user" type="text" class="userName" value="{{user.username}}" size="{{user.username.length}}" />
+    <i id="usericon"></i>
+  </div>
+</div>
+<div class="row" id="articles">
   {{#each articles}}
   <div class="article" data-article-id="{{_id}}">
     <a href="{{url}}">{{title}}</a>
