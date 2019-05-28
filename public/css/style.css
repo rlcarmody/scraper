@@ -67,7 +67,7 @@ textarea {
   font-weight: 600;
 }
 
-.userName:focus {
+#user:focus {
   color: #555
 }
 
