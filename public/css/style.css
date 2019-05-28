@@ -38,6 +38,7 @@ body {
   border: none;
   background-color: inherit;
   font-size: 2rem;
+  color: #fff;
 }
 
 #user:focus {
@@ -64,7 +65,6 @@ textarea {
 .userName {
   margin-bottom: 2px;
   font-weight: 600;
-  color: #fff;
 }
 
 .userName:focus {
